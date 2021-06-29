@@ -62,3 +62,13 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
+Capybara.app = Rack::Builder.new do
+  map "/" do
+    run(->(env) { [302, {"Location" => "/i/am/users#{env['REQUEST_PATH']}"}, [""]] })
+  end
+
+  map "/i/am/users" do
+    run Rails.application
+  end
+end.to_app
